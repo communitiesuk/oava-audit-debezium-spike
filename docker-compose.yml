@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  localstack:
+    container_name: "localstack"
+    image: localstack/localstack:2.1.0
+    ports:
+      - "24566:4566"
+    environment:
+      - DEBUG=${DEBUG-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./docker/localstack-init/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+      - "./docker/volumes/localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  mysql:
+    container_name: "mysql"
+    image: mysql:8
+    ports:
+      - 23306:3306
+    volumes:
+      - "./docker/mysql-init:/docker-entrypoint-initdb.d"
+      - "./docker/volumes/mysql:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+  debezium:
+    container_name: "debezium"
+    image: debezium/server:2.3.0.Final
+    ports:
+      - 8080:8080
+    volumes:
+      - "./docker/debezium/conf:/debezium/conf"
+      - "./docker/volumes/debezium/data:/debezium/data debezium/server"
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - LOG_LEVEL=TRACE
+#      - DEBEZIUM_SINK_TYPE=kinesis
+#      - DEBEZIUM_SINK_KINESIS_REGION=us-east-1
+#      - DEBEZIUM_SINK_KINESIS_ENDPOINT=http://localstack:4566
+#      - DEBEZIUM_SOURCE_CONNECTOR_CLASS=io.debezium.connector.mysql.MySqlConnector
+#      - DEBEZIUM_SOURCE_OFFSET_STORAGE=org.apache.kafka.connect.storage.FileOffsetBackingStore
+#      - DEBEZIUM_SOURCE_OFFSET_STORAGE_FILE_FILENAME=data/offset.dat
+#      - DEBEZIUM_SOURCE_OFFSET_FLUSH_INTERVAL_MS=0
+#      - DEBEZIUM_SOURCE_DATABASE_HOSTNAME=mysql
+#      - DEBEZIUM_SOURCE_DATABASE_PORT=3306
+#      - DEBEZIUM_SOURCE_DATABASE_USER=root
+#      - DEBEZIUM_SOURCE_DATABASE_PASSWORD=password
+#      - DEBEZIUM_SOURCE_DATABASE_allowPublicKeyRetrieval=false
+#      - DEBEZIUM_SOURCE_DATABASE_useSSL=false
+#      - DEBEZIUM_SOURCE_DATABASE_SERVER_ID=123456
+#      - DEBEZIUM_SOURCE_TOPIC_PREFIX=proxy_audit
+#      - DEBEZIUM_SOURCE_TABLE_INCLUDE_LIST=proxy_application_aud
+#      - DEBEZIUM_SOURCE_DATABASE_DBNAME=proxy_application
+#      - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL=io.debezium.storage.file.history.FileSchemaHistory
+#      - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL_FILE_FILENAME=data/history.dat
+#      - DEBEZIUM_FORMAT_KEY=json
+#      - DEBEZIUM_FORMAT_VALUE=json
+#      - DEBEZIUM_FORMAT_HEADER=json
+#      - DEBEZIUM_SINK_KINESIS_CREDENTIALS_PROFILE=
+#      - DEBEZIUM_SINK_KINESIS_NULL_KEY=
+    depends_on:
+      - mysql
