@@ -16,6 +16,13 @@ Note: When starting up the containers using `docker-compose up`, Debezium-Server
 because it needs the MySql database and the Kinesis stream to ready first. Therefore once the services have started
 you can run `docker-compose up -d` in another window and it will start up Debezium-Server.
 
+# Debezium-Server
+In a nutshell we have source - our mysql database and a sink - the target system, in our case Kinesis.
+
+Debezium can run either in embedded mode or standlone server mode. Embedded mode is where you use the debezium dependencies directly in your application code
+and handle the change processing yourself. I have opted to use the debezium server in standalone mode because it requires no code to be written. It's all based on
+configuring a docker container. You get all the sink integration free out of the box with just a few configuration parameters.
+
 # Kinesis Streams
 
 The Kinesis streams have to be created upfront for Debezium to send data to them. This is done in
