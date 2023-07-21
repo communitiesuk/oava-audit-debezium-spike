@@ -19,7 +19,7 @@ you can run `docker-compose up -d` in another window and it will start up Debezi
 # Debezium-Server
 In a nutshell we have source - our mysql database and a sink - the target system, in our case Kinesis.
 
-Debezium can run either in embedded mode or standlone server mode. Embedded mode is where you use the debezium dependencies directly in your application code
+Debezium can run either in embedded mode or standalone server mode. Embedded mode is where you use the debezium dependencies directly in your application code
 and handle the change processing yourself. I have opted to use the debezium server in standalone mode because it requires no code to be written. It's all based on
 configuring a docker container. You get all the sink integration free out of the box with just a few configuration parameters.
 
@@ -29,8 +29,10 @@ The Kinesis streams have to be created upfront for Debezium to send data to them
 docker/localstack-init/init-aws.sh.
 You will notice 2 streams that are set up:
 
-* proxy_audit.proxy_application.foo (This is for the changes to the foo table. We will need 1 stream per table)
-* proxy_audit (This is for any schema DDL changes)
+* proxy_audit_dev.proxy_application.foo (This is for the changes to the foo table. We will need 1 stream per table)
+* proxy_audit_dev (This is for any schema DDL changes)
+
+I have used the `_dev` suffix so that we can create environment specific streams in AWS 
 
 ## Inspecting the Kinesis stream
 

@@ -46,7 +46,7 @@ services:
       - DEBEZIUM_SOURCE_DATABASE_USER=root
       - DEBEZIUM_SOURCE_DATABASE_PASSWORD=password
       - DEBEZIUM_SOURCE_DATABASE_DBNAME=proxy_application
-      - DEBEZIUM_SOURCE_TOPIC_PREFIX=proxy_audit
+      - DEBEZIUM_SOURCE_TOPIC_PREFIX=proxy_audit_dev
       - DEBEZIUM_SOURCE_TABLE_INCLUDE_LIST=proxy_application.foo
       - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL=io.debezium.storage.file.history.FileSchemaHistory
       - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL_FILE_FILENAME=/debezium/data/history.dat
