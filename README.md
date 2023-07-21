@@ -29,7 +29,7 @@ The Kinesis streams have to be created upfront for Debezium to send data to them
 docker/localstack-init/init-aws.sh.
 You will notice 2 streams that are set up:
 
-* proxy_audit.proxy_application.foo (This is for the changes to the foo table)
+* proxy_audit.proxy_application.foo (This is for the changes to the foo table. We will need 1 stream per table)
 * proxy_audit (This is for any schema DDL changes)
 
 ## Inspecting the Kinesis stream
