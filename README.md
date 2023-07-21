@@ -1,4 +1,4 @@
-**# oava-audit-debezium-spike
+# oava-audit-debezium-spike
 
 This project demonstrates the usage of debezium-server to capture change events from a database and push those
 changes onto a AWS Kinesis stream.
