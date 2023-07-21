@@ -267,7 +267,7 @@ In this POC I have used a file based storage mechanism. You will see the offset 
 docker volume
 at docker/volumes/debezium/data
 
-The following options are available for storage:
+The following options are available for storage: (TBC)
 
 |         | File | Kafka | Azure blob | Redis | S3  | JDBC | Rocket MQ |
 |---------|------|-------|------------|-------|-----|------|-----------|
