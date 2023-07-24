@@ -24,7 +24,7 @@ Debezium can run either in embedded mode or standalone server mode. Embedded mod
 dependencies directly in your application code
 and handle the change processing yourself. I have opted to use the debezium server in standalone mode because it
 requires no code to be written. It's all based on
-configuring a docker container. You get all the sink integration free out of the box with just a few configuration
+configuring a docker container. You get all the source and sink integration free out of the box with just a few configuration
 parameters.
 
 ## Kinesis Streams
