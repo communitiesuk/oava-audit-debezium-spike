@@ -29,8 +29,8 @@ parameters.
 
 ## Kinesis Streams
 
-The Kinesis streams have to be created upfront for Debezium to send data to them. This is done in
-docker/localstack-init/init-aws.sh.
+The Kinesis streams have to be created upfront for Debezium to send data to them. This is done
+[here](docker/localstack-init/init-aws.sh).
 You will notice 2 streams that are set up:
 
 * proxy_audit_dev.proxy_application.foo (This is for the changes to the foo table. We will need 1 stream per table)
@@ -284,8 +284,7 @@ offset after all events are processed.
 Debezium also maintains a log of schema history. Both offset and history information needs to be persistent
 
 In this POC I have used a file based storage mechanism. You will see the offset and history dat files mounted in a
-docker volume
-at docker/volumes/debezium/data
+docker volume [here](docker/volumes/debezium/data)
 
 The following options are available for storage: (TBC. Awaiting feedback from Debezium team)
 
