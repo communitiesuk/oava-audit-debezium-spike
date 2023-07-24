@@ -286,7 +286,7 @@ Debezium also maintains a log of schema history. Both offset and history informa
 In this POC I have used a file based storage mechanism. You will see the offset and history dat files mounted in a
 docker volume [here](docker/volumes/debezium/data)
 
-The following options are available for storage: (TBC. Awaiting feedback from Debezium team)
+The following options are available for storage:
 
 |         | File | Kafka | Azure blob | Redis | S3  | JDBC | Rocket MQ |
 |---------|------|-------|------------|-------|-----|------|-----------|
