@@ -3,7 +3,7 @@
 This project demonstrates the usage of debezium-server to capture change events from a database and push those
 changes onto a AWS Kinesis stream.
 
-# docker-compose stack
+## docker-compose stack
 
 The entire stack can be started using the docker-compose.yml files supplied in the root of this project.
 
@@ -16,14 +16,18 @@ Note: When starting up the containers using `docker-compose up`, Debezium-Server
 because it needs the MySql database and the Kinesis stream to ready first. Therefore once the services have started
 you can run `docker-compose up -d` in another window and it will start up Debezium-Server.
 
-# Debezium-Server
+## Debezium-Server
+
 In a nutshell we have source - our mysql database and a sink - the target system, in our case Kinesis.
 
-Debezium can run either in embedded mode or standalone server mode. Embedded mode is where you use the debezium dependencies directly in your application code
-and handle the change processing yourself. I have opted to use the debezium server in standalone mode because it requires no code to be written. It's all based on
-configuring a docker container. You get all the sink integration free out of the box with just a few configuration parameters.
+Debezium can run either in embedded mode or standalone server mode. Embedded mode is where you use the debezium
+dependencies directly in your application code
+and handle the change processing yourself. I have opted to use the debezium server in standalone mode because it
+requires no code to be written. It's all based on
+configuring a docker container. You get all the sink integration free out of the box with just a few configuration
+parameters.
 
-# Kinesis Streams
+## Kinesis Streams
 
 The Kinesis streams have to be created upfront for Debezium to send data to them. This is done in
 docker/localstack-init/init-aws.sh.
@@ -32,9 +36,16 @@ You will notice 2 streams that are set up:
 * proxy_audit_dev.proxy_application.foo (This is for the changes to the foo table. We will need 1 stream per table)
 * proxy_audit_dev (This is for any schema DDL changes)
 
-I have used the `_dev` suffix so that we can create environment specific streams in AWS 
+I have used the `_dev` suffix so that we can create environment specific streams in AWS
 
-## Inspecting the Kinesis stream
+The stream naming convention must follow the properties supplied to debezium-server:
+`«debezium.source.database.server.name».«debezium.source.database.dbname».«tablename»`
+
+Table name refactors will have to take these dependencies into account. However I believe there is a way where you can
+have the stream name to be independent of the table name but I have not had time to look into it yet.
+
+
+### Inspecting the Kinesis stream
 
 You will need a kinesis consumer. I have found this tool the easiest to
 use: https://pypi.org/project/aws-kinesis-consumer/
@@ -55,7 +66,7 @@ We use the `--iterator-type trim-horizon` iterator type since we want to start r
 Next, you can post some database inserts, updates and deletes to the `foo` table in the database and you will see the
 change events in your kinesis consumer.
 
-## Format of change events
+### Format of change events
 
 A change event looks something like this:
 
@@ -263,7 +274,7 @@ row as before and after. In the example above this was a read operation as indic
 initial
 read debezium did of the database and found 1 pre-existing row which it read.
 
-# Offset and history files
+## Offset and history files
 
 Debezium maintains a offset i.e a pointer in the database log that lets it track what change events it has already
 processed.
@@ -276,12 +287,26 @@ In this POC I have used a file based storage mechanism. You will see the offset 
 docker volume
 at docker/volumes/debezium/data
 
-The following options are available for storage: (TBC)
+The following options are available for storage: (TBC. Awaiting feedback from Debezium team)
 
 |         | File | Kafka | Azure blob | Redis | S3  | JDBC | Rocket MQ |
 |---------|------|-------|------------|-------|-----|------|-----------|
-| Offset  | YES  | YES   |            |       | NO  |      |           |
-| History | YES  | YES   |            | YES   | YES |      | YES       |
-
+| Offset  | YES  | YES   | NO         | YES   | NO  | YES  | NO        |
+| History | YES  | YES   | YES        | YES   | YES | YES  | YES       |
 
 If using a File based storage mechanism, we could store the file in a EFS volume.
+
+## Initial snapshot
+When Debezium starts up and has never committed an offset, it will read all data from the database and commit a new offset.
+This satisfies the day-zero requirement.
+
+Note: MySql server purges older binlog files and the connectors last position may be lost and it will perform another day-zero
+load. Therefore we need to ensure the MySql binlog file has a high enough retention period. 
+
+## Decision between Kafka and Kinesis
+
+At the time of writing I have never used Kinesis before. My background is Kafka.
+However, for this spike I decided to use Kinesis mainly because of the learning curve developers would have
+to follow in order to understand kafka.
+
+Please see more analysis here: https://www.softkraft.co/aws-kinesis-vs-kafka-comparison/#summary---which-is-right-for-you
