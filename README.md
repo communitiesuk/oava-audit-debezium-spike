@@ -293,7 +293,7 @@ The following options are available for storage:
 | Offset  | YES  | YES   | NO         | YES   | NO  | YES  | NO        |
 | History | YES  | YES   | YES        | YES   | YES | YES  | YES       |
 
-If using a File based storage mechanism, we could store the file in a EFS volume.
+If using a File based storage mechanism, we could store the file in an EFS volume.
 
 ## Initial snapshot
 When Debezium starts up and has never committed an offset, it will read all data from the database and commit a new offset.
