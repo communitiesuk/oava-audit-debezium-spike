@@ -8,9 +8,9 @@ changes onto a AWS Kinesis stream.
 The entire stack can be started using the docker-compose.yml files supplied in the root of this project.
 
 The stack consists of:
-1- LocalStack (This provides a AWS Kinesis endpoint)
-2- MySql (The source database)
-3- Debezium-Server (Provides Change Data Capture)
+* LocalStack (This provides a AWS Kinesis endpoint)
+* MySql (The source database)
+* Debezium-Server (Provides Change Data Capture)
 
 Note: When starting up the containers using `docker-compose up`, Debezium-Server will fail to start initially
 because it needs the MySql database and the Kinesis stream to ready first. Therefore once the services have started
