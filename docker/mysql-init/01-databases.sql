@@ -12,3 +12,6 @@ CREATE TABLE `foo`
     PRIMARY KEY (`id`)
 );
 
+INSERT INTO foo (id, first_name, last_name) VALUES ("24621965-2d28-415e-90ad-a49fac7426f1", "HANNAH", "MAYHEW" );
+INSERT INTO foo (id, first_name, last_name) VALUES ("dcdda787-335f-4aa7-9f77-465645b521f6", "GURPS", "BASSI" );
+
