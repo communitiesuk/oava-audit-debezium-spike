@@ -9,8 +9,8 @@ services:
     environment:
       - DEBUG=${DEBUG-}
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - KINESIS_INITIALIZE_STREAMS=proxy_audit_dev.proxy_application.foo:1,proxy_audit_dev:1
     volumes:
-      - "./docker/localstack-init/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
       - "./docker/volumes/localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
   mysql:
@@ -48,6 +48,8 @@ services:
       - DEBEZIUM_SOURCE_DATABASE_DBNAME=proxy_application
       - DEBEZIUM_SOURCE_TOPIC_PREFIX=proxy_audit_dev
       - DEBEZIUM_SOURCE_TABLE_INCLUDE_LIST=proxy_application.foo
+      - DEBEZIUM_SOURCE_COLUMN_INCLUDE_LIST=proxy_application.foo.first_name
+      - DEBEZIUM_SOURCE_SKIP_MESSAGES_WITHOUT_CHANGE=true
       - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL=io.debezium.storage.file.history.FileSchemaHistory
       - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL_FILE_FILENAME=/debezium/data/history.dat
       - DEBEZIUM_SOURCE_DATABASE_SERVER_ID=123456

@@ -8,6 +8,7 @@ CREATE TABLE `foo`
 (
     `id`                          char(36)          NOT NULL,
     `first_name`                  varchar(35)       NOT NULL,
+    `last_name`                  varchar(35)       NOT NULL,
     PRIMARY KEY (`id`)
 );
 
