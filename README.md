@@ -59,7 +59,7 @@ export AWS_DEFAULT_REGION=us-east-1
 ```
 
 ```shell
-aws-kinesis-consumer --stream-name proxy_audit.proxy_application.foo  --endpoint http://localhost:24566 --iterator-type trim-horizon
+aws-kinesis-consumer --stream-name proxy_audit_dev.proxy_application.foo  --endpoint http://localhost:24566 --iterator-type trim-horizon
 ```
 
 We use the `--iterator-type trim-horizon` iterator type since we want to start reading from the start of the stream.
@@ -298,7 +298,8 @@ If using a File based storage mechanism, we could store the file in an EFS volum
 
 ## Initial snapshot
 When Debezium starts up and has never committed an offset, it will read all data from the database and commit a new offset.
-This satisfies the day-zero requirement.
+This satisfies the day-zero requirement. When deploying against a database in the cloud e.g. RDS Aurora, Debezium needs a table level lock
+on the source tables it is reading from in order to take a snapshot. Therefore it's probably best to do this out of hours.
 
 Note: MySql server purges older binlog files and the connectors last position may be lost and it will perform another day-zero
 load. Therefore we need to ensure the MySql binlog file has a high enough retention period. 
