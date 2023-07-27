@@ -27,7 +27,7 @@ services:
     container_name: "debezium"
     image: debezium/server:2.3.0.Final
     ports:
-      - 8080:8080
+      - 28080:8080
     volumes:
       - "./docker/volumes/debezium/data:/debezium/data"
     environment:
@@ -53,5 +53,7 @@ services:
       - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL=io.debezium.storage.file.history.FileSchemaHistory
       - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL_FILE_FILENAME=/debezium/data/history.dat
       - DEBEZIUM_SOURCE_DATABASE_SERVER_ID=123456
+      - DEBEZIUM_SOURCE_KEY_CONVERTER_SCHEMAS_ENABLE=false
+      - DEBEZIUM_SOURCE_VALUE_CONVERTER_SCHEMAS_ENABLE=false
     depends_on:
       - mysql
