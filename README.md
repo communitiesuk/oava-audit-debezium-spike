@@ -304,6 +304,9 @@ on the source tables it is reading from in order to take a snapshot. Therefore i
 Note: MySql server purges older binlog files and the connectors last position may be lost and it will perform another day-zero
 load. Therefore we need to ensure the MySql binlog file has a high enough retention period. 
 
+## Debezium Health
+Debezium uses Quarkus and then health endpoint can be reached using http://localhost:8080/q/health
+
 ## Decision between Kafka and Kinesis
 
 At the time of writing I have never used Kinesis before. My background is Kafka.
