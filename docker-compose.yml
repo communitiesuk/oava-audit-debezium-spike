@@ -33,7 +33,7 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - LOG_LEVEL=TRACE
+      - QUARKUS_LOG_LEVEL=TRACE
       - DEBEZIUM_SINK_TYPE=kinesis
       - DEBEZIUM_SINK_KINESIS_REGION=us-east-1
       - DEBEZIUM_SINK_KINESIS_ENDPOINT=http://localstack:4566
