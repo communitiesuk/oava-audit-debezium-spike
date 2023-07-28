@@ -304,6 +304,19 @@ on the source tables it is reading from in order to take a snapshot. Therefore i
 Note: MySql server purges older binlog files and the connectors last position may be lost and it will perform another day-zero
 load. Therefore we need to ensure the MySql binlog file has a high enough retention period. 
 
+## Debezium Health
+Debezium uses Quarkus and then health endpoint can be reached using http://localhost:8080/q/health
+
+## Enable binary logging on the database
+At the time of writing I have confirmed binary logging is switched off for our Aurora database in AWS. We need to enable this in order for Debezium to work.
+I have confirmed this via:
+```sql
+SELECT variable_value as "BINARY LOGGING STATUS (log-bin) ::"
+FROM performance_schema.global_variables WHERE variable_name='log_bin'
+```
+We would also need to think about how long we want this binary log to grow for. This is controlled by `expire_logs_days` variable in the performance_schema
+above.
+
 ## Decision between Kafka and Kinesis
 
 At the time of writing I have never used Kinesis before. My background is Kafka.
