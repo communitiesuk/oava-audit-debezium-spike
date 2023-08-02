@@ -9,7 +9,7 @@ services:
     environment:
       - DEBUG=${DEBUG-}
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - KINESIS_INITIALIZE_STREAMS=proxy_audit_dev.proxy_application.foo:1,proxy_audit_dev:1
+      - KINESIS_INITIALIZE_STREAMS=dev_all_proxy_db_changes:1
     volumes:
       - "./docker/volumes/localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -25,7 +25,10 @@ services:
       - MYSQL_ROOT_PASSWORD=password
   debezium:
     container_name: "debezium"
-    image: debezium/server:2.3.0.Final
+    build:
+      dockerfile: Dockerfile
+      context: docker
+    image: debezium/server-aurora-mysql:1.0
     ports:
       - 28080:8080
     volumes:
@@ -33,7 +36,7 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - QUARKUS_LOG_LEVEL=TRACE
+#      - QUARKUS_LOG_LEVEL=TRACE
       - DEBEZIUM_SINK_TYPE=kinesis
       - DEBEZIUM_SINK_KINESIS_REGION=us-east-1
       - DEBEZIUM_SINK_KINESIS_ENDPOINT=http://localstack:4566
@@ -46,6 +49,7 @@ services:
       - DEBEZIUM_SOURCE_DATABASE_USER=root
       - DEBEZIUM_SOURCE_DATABASE_PASSWORD=password
       - DEBEZIUM_SOURCE_DATABASE_DBNAME=proxy_application
+      - DEBEZIUM_SOURCE_DATABASE_JDBC_DRIVER=software.aws.rds.jdbc.mysql.Driver
       - DEBEZIUM_SOURCE_TOPIC_PREFIX=proxy_audit_dev
       - DEBEZIUM_SOURCE_TABLE_INCLUDE_LIST=proxy_application.foo
       - DEBEZIUM_SOURCE_COLUMN_INCLUDE_LIST=proxy_application.foo.first_name
@@ -55,6 +59,11 @@ services:
       - DEBEZIUM_SOURCE_DATABASE_SERVER_ID=123456
       - DEBEZIUM_SOURCE_KEY_CONVERTER_SCHEMAS_ENABLE=false
       - DEBEZIUM_SOURCE_VALUE_CONVERTER_SCHEMAS_ENABLE=false
-      - QUARKUS_LOG_CONSOLE_JSON=false
+      - DEBEZIUM_SOURCE_INCLUDE_SCHEMA_CHANGES=false
+      - DEBEZIUM_TRANSFORMS=topic.select
+      - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TYPE=io.debezium.transforms.ByLogicalTableRouter
+      - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TOPIC_REGEX=.*
+      - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TOPIC_REPLACEMENT=dev_all_proxy_db_changes
+      - QUARKUS_LOG_CONSOLE_JSON=false # We don't need json logging for local use
     depends_on:
       - mysql

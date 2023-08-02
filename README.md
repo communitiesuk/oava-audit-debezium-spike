@@ -12,6 +12,11 @@ The stack consists of:
 * MySql (The source database)
 * Debezium-Server (Provides Change Data Capture)
 
+
+You will need to build the debezium image first (use `docker-compose build debezium`) because I have customised the Dockerfile to include the AWS Aurora driver.
+This doesn't actually get picked up at the moment until we can specify the driver class name as an environment variable.
+I have currently got a PR with the Debezium project to address this: https://github.com/debezium/debezium/pull/4713
+
 Note: When starting up the containers using `docker-compose up`, Debezium-Server will fail to start initially
 because it needs the MySql database and the Kinesis stream to ready first. Therefore once the services have started
 you can run `docker-compose up -d` in another window and it will start up Debezium-Server.
@@ -32,18 +37,20 @@ parameters.
 The Kinesis streams have to be created upfront for Debezium to send data to them. This is done through an environment
 variable in the localstack container.
 
-You will notice 2 streams that are set up:
-
-* proxy_audit_dev.proxy_application.foo (This is for the changes to the foo table. We will need 1 stream per table)
-* proxy_audit_dev (This is for any schema DDL changes)
-
+* dev_all_proxy_db_changes
+* By default debezium requires a stream to publish schema DDL changes to. I have disabled this through the environment variable `DEBEZIUM_SOURCE_INCLUDE_SCHEMA_CHANGES=false`
 I have used the `_dev` suffix so that we can create environment specific streams in AWS
 
-The stream naming convention must follow the properties supplied to debezium-server:
+By default, the stream naming convention must follow the properties supplied to debezium-server:
 `«debezium.source.database.server.name».«debezium.source.database.dbname».«tablename»`
+However, you will see I have added configuration in the docker container to use a logical mapping so that all table changes can be streamed to the same kinesis destination:
 
-Table name refactors will have to take these dependencies into account. However I believe there is a way where you can
-have the stream name to be independent of the table name but I have not had time to look into it yet.
+```yaml
+      - DEBEZIUM_TRANSFORMS=topic.select
+      - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TYPE=io.debezium.transforms.ByLogicalTableRouter
+      - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TOPIC_REGEX=.*
+      - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TOPIC_REPLACEMENT=dev_all_proxy_db_changes
+```
 
 
 ### Inspecting the Kinesis stream
