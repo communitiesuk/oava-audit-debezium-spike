@@ -15,7 +15,8 @@ The stack consists of:
 
 You will need to build the debezium image first (use `docker-compose build debezium`) because I have customised the Dockerfile to include the AWS Aurora driver.
 This doesn't actually get picked up at the moment until we can specify the driver class name as an environment variable.
-I have currently got a PR with the Debezium project to address this: https://github.com/debezium/debezium/pull/4713
+I have submitted some code to the Debezium project which will be made available in release 2.4.0.Alpha2, ETA 10th August 2023. We need to change the base image to point to this version
+in order to make use of the functionality.
 
 ## Debezium-Server
 
