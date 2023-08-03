@@ -1,4 +1,4 @@
-FROM debezium/server:2.3.0.Final
+FROM debezium/server:2.4.0.Alpha1
 MAINTAINER DLHUC
 
 ARG DRIVER_ARTEFACT=aws-mysql-jdbc

@@ -17,10 +17,6 @@ You will need to build the debezium image first (use `docker-compose build debez
 This doesn't actually get picked up at the moment until we can specify the driver class name as an environment variable.
 I have currently got a PR with the Debezium project to address this: https://github.com/debezium/debezium/pull/4713
 
-Note: When starting up the containers using `docker-compose up`, Debezium-Server will fail to start initially
-because it needs the MySql database and the Kinesis stream to ready first. Therefore once the services have started
-you can run `docker-compose up -d` in another window and it will start up Debezium-Server.
-
 ## Debezium-Server
 
 In a nutshell we have source - our mysql database and a sink - the target system, in our case Kinesis.

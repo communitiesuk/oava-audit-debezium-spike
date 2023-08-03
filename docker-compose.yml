@@ -23,6 +23,12 @@ services:
       - "./docker/volumes/mysql:/var/lib/mysql"
     environment:
       - MYSQL_ROOT_PASSWORD=password
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 5s
+      timeout: 20s
+      retries: 30
+
   debezium:
     container_name: "debezium"
     build:
@@ -36,7 +42,7 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - QUARKUS_LOG_LEVEL=TRACE
+      - QUARKUS_LOG_LEVEL=INFO
       - DEBEZIUM_SINK_TYPE=kinesis
       - DEBEZIUM_SINK_KINESIS_REGION=us-east-1
       - DEBEZIUM_SINK_KINESIS_ENDPOINT=http://localstack:4566
@@ -66,4 +72,6 @@ services:
       - DEBEZIUM_TRANSFORMS_TOPIC_SELECT_TOPIC_REPLACEMENT=dev_all_proxy_db_changes
       - QUARKUS_LOG_CONSOLE_JSON=false # We don't need json logging for local use
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
