@@ -328,3 +328,6 @@ However, for this spike I decided to use Kinesis mainly because of the learning 
 to follow in order to understand kafka.
 
 Please see more analysis here: https://www.softkraft.co/aws-kinesis-vs-kafka-comparison/#summary---which-is-right-for-you
+
+## Error handling on the kinesis consumer side
+This is something we need to decide on. We need a way to store errored events, park them and then replay.
