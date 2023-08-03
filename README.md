@@ -319,7 +319,7 @@ SELECT variable_value as "BINARY LOGGING STATUS (log-bin) ::"
 FROM performance_schema.global_variables WHERE variable_name='log_bin'
 ```
 We would also need to think about how long we want this binary log to grow for. This is controlled by `expire_logs_days` variable in the performance_schema
-above.
+above. The default is 30 days for MySql.
 
 ## Decision between Kafka and Kinesis
 
