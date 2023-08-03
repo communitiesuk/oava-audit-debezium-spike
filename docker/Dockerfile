@@ -1,6 +1,9 @@
 FROM debezium/server:2.3.0.Final
 MAINTAINER DLHUC
 
+ARG DRIVER_ARTEFACT=aws-mysql-jdbc
+ARG DRIVER_VERSION=1.1.9
+
 USER root
-COPY debezium-init/aws-mysql-jdbc-1.1.8.jar /debezium/lib
-RUN chmod 666 /debezium/lib/aws-mysql-jdbc-1.1.8.jar
+RUN cd /debezium/lib && curl -O -J https://repo1.maven.org/maven2/software/aws/rds/aws-mysql-jdbc/$DRIVER_VERSION/$DRIVER_ARTEFACT-$DRIVER_VERSION.jar && \
+    chmod 666 $DRIVER_ARTEFACT-$DRIVER_VERSION.jar
