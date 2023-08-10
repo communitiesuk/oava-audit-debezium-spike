@@ -1,5 +1,5 @@
-#TODO replace this tag when new release is made available
-FROM debezium/server:nightly
+#TODO replace this tag when 2.4.0 final release is made available
+FROM debezium/server:2.4.0.Alpha2
 MAINTAINER DLHUC
 
 ARG DRIVER_ARTEFACT=aws-mysql-jdbc
